@@ -20,14 +20,15 @@ def initialize(info = {})
             [ 'URL', 'https://github.com/xinwenfu/Malware-Analysis/edit/main/MetasploitNewModule' ]
         ],
         'Privileged'     => false,
-        'DefaultOptions' =>
-        { 
-            'RPORT' => 9999
-        },
+        #'DefaultOptions' =>
+       # { 
+        #    'RPORT' => 9999
+        #},
         'Platform'       => 'Win',	# Supporting what platforms are supported, e.g., win, linux, osx, unix, bsd.
         'DisclosureDate' => 'Mar. 30, 2022'))	# When the vulnerability was disclosed in public
         register_options(
         [
+            Opt::RPORT(9999),
             OptInt.new('ThreadNum', [ true, 'A hex or decimal', 102]) # Sets the number of threads to use
         ])
     end
