@@ -18,12 +18,16 @@ class MetasploitModule < Msf::Auxiliary	# This is a remote exploit module inheri
           [ 'URL', 'https://github.com/xinwenfu/Malware-Analysis/edit/main/MetasploitNewModule' ]
         ],
       'Privileged'     => false,
-      'DefaultOptions' =>
-        { 
-          'RPORT' => 9999
-        },
+      #'DefaultOptions' =>
+        #{ 
+          #'RPORT' => 9999
+      #  },
       'Platform'       => 'Win',	# Supporting what platforms are supported, e.g., win, linux, osx, unix, bsd.
       'DisclosureDate' => 'Mar. 30, 2022'))	# When the vulnerability was disclosed in public
+
+      register_options([
+	    Opt::RPORT(9999)
+	])
   end
 
   def run	# Actual exploit, since this is a Auxiliary, it is a run function, type run to execute
