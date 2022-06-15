@@ -20,7 +20,7 @@ def initialize(info = {})
         'DisclosureDate' => 'Mar. 30, 2022'))	# When the vulnerability was disclosed in public
         register_options(
         [
-            OptInt.new('ThreadNum', [ true, 'A hex or decimal', 102]), # Sets the number of threads to use
+            OptInt.new('ThreadNum', [ true, 'A hex or decimal', 10]), # Sets the number of threads to use
             OptAddress.new('RHOST', [ true, 'Set IP of Reciving Host', '127.0.0.1' ]),
             OptPort.new('RPORT', [true, 'Set Port of Reciving Host', 9999])
         ])
