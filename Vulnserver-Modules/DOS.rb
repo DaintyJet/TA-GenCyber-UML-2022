@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 class MetasploitModule < Msf::Auxiliary	# This is a remote exploit module inheriting from the remote exploit class
   Rank = NormalRanking	# Potential impact to the target
 
