@@ -43,4 +43,3 @@ class MetasploitModule < Msf::Auxiliary	# This is a remote exploit module inheri
         print_status("Exiting Run Function")
   end
 end
->>>>>>> parent of d09ec3d (Update DOS.rb)
